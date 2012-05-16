@@ -22,6 +22,8 @@
 
          -->
     <property file="build.properties"/>
+	<property environment="env"/>
+	<property name="sdk.dir" value="${env.ANDROID_HOME}"/>
 
     <!-- The default.properties file is created and updated by the 'android' tool, as well
          as ADT.
@@ -33,7 +35,7 @@
 
     <target name="findAndroidWindows" if="isWindows">
         <echo message="Finding the Android version in windows"/>
-        <exec executable="./find-android.bat"/>
+        <!--exec executable="./find-android.bat"/-->		
     </target>
     <target name="findAndroidUnix" unless="isWindows">
         <echo message="Finding the Android version in *nix"/>
