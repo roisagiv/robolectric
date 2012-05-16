@@ -296,6 +296,15 @@ public class ShadowAlertDialog extends ShadowDialog {
 
             return realBuilder;
         }
+        
+        @Implementation
+        public AlertDialog.Builder setAdapter(ListAdapter adapter, final DialogInterface.OnClickListener listener)
+        {
+        	this.adapter = adapter;
+        	this.clickListener = listener;
+        	
+        	return realBuilder;
+        }
 
         @Implementation(i18nSafe=false)
         public AlertDialog.Builder setTitle(CharSequence title) {
