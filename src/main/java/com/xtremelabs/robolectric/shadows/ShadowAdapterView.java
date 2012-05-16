@@ -155,11 +155,6 @@ public class ShadowAdapterView extends ShadowViewGroup {
         automaticallyUpdateRowViews = shouldUpdate;
     }
 
-    /**
-     * Non-Android accessor.
-     *
-     * @return the index of the selected item
-     */
     @Implementation
     public int getSelectedItemPosition() {
         return selectedPosition;
@@ -204,6 +199,11 @@ public class ShadowAdapterView extends ShadowViewGroup {
     @Implementation
     public void setOnItemLongClickListener(AdapterView.OnItemLongClickListener listener) {
         this.onItemLongClickListener = listener;
+    }
+
+    @Implementation
+    public AdapterView.OnItemLongClickListener getOnItemLongClickListener() {
+        return onItemLongClickListener;
     }
 
     @Implementation

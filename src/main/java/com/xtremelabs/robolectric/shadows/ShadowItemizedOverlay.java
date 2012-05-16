@@ -1,15 +1,14 @@
 package com.xtremelabs.robolectric.shadows;
 
-import java.util.ArrayList;
-
 import android.graphics.drawable.Drawable;
-
 import com.google.android.maps.ItemizedOverlay;
 import com.google.android.maps.OverlayItem;
 import com.google.android.maps.ShadowItemizedOverlayBridge;
 import com.xtremelabs.robolectric.internal.Implementation;
 import com.xtremelabs.robolectric.internal.Implements;
 import com.xtremelabs.robolectric.internal.RealObject;
+
+import java.util.ArrayList;
 
 /**
  * Shadow for {@code ItemizedOverlay} that keeps track of what has been called and enables the return value for
@@ -21,25 +20,24 @@ public class ShadowItemizedOverlay<Item extends OverlayItem> {
     private boolean isPopulated;
     private boolean shouldHit;
     private boolean lastFocusedIndexWasReset;
-    private ArrayList<Item> mItems = new ArrayList<Item>();
+    private ArrayList<Item> items = new ArrayList<Item>();
 
     @RealObject
     private ItemizedOverlay<Item> realObject;
-    
+
     @Implementation
     public final void populate() {
         isPopulated = true;
-        
-        mItems.clear();
-        for(int i = 0; i < realObject.size(); i++)
-        {
-            mItems.add(getBridge().createItem(i));
+
+        items.clear();
+        for (int i = 0; i < realObject.size(); i++) {
+            items.add(getBridge().createItem(i));
         }
     }
-    
+
     @Implementation
     public final Item getItem(int position) {
-        return mItems.get(position);
+        return items.get(position);
     }
 
     @Implementation
@@ -87,7 +85,7 @@ public class ShadowItemizedOverlay<Item extends OverlayItem> {
     public void setShouldHit(boolean shouldHit) {
         this.shouldHit = shouldHit;
     }
-    
+
     private ShadowItemizedOverlayBridge<Item> getBridge() {
         return new ShadowItemizedOverlayBridge<Item>(realObject);
     }

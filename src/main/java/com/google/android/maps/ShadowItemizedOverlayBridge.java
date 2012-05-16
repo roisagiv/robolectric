@@ -9,7 +9,7 @@ public class ShadowItemizedOverlayBridge<Item extends OverlayItem> {
     public ShadowItemizedOverlayBridge(ItemizedOverlay<Item> itemizedObject) {
         this.itemizedObject = itemizedObject;
     }
-    
+
     public Item createItem(int i) {
         return itemizedObject.createItem(i);
     }
