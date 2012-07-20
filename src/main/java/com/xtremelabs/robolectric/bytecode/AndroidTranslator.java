@@ -15,7 +15,7 @@ public class AndroidTranslator implements Translator {
      * IMPORTANT -- increment this number when the bytecode generated for modified classes changes
      * so the cache file can be invalidated.
      */
-    public static final int CACHE_VERSION = 20;
+    public static final int CACHE_VERSION = 21;
 
     private static final List<ClassHandler> CLASS_HANDLERS = new ArrayList<ClassHandler>();
 
@@ -33,7 +33,9 @@ public class AndroidTranslator implements Translator {
         instrumentingList.add("com.google.android.maps");
         instrumentingList.add("org.apache.http.impl.client.DefaultRequestDirector");
 
+        instrumentingExcludeList.add("android.support.v4.app.NotificationCompat");
         instrumentingExcludeList.add("android.support.v4.content.LocalBroadcastManager");
+        instrumentingExcludeList.add("android.support.v4.util.LruCache");
     }
 
     public AndroidTranslator(ClassHandler classHandler, ClassCache classCache, List<String> customShadowClassNames) {

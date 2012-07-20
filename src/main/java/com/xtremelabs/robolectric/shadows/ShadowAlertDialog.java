@@ -99,6 +99,41 @@ public class ShadowAlertDialog extends ShadowDialog {
 	}
 
 	@Implementation
+    public void setButton(int whichButton, CharSequence text, DialogInterface.OnClickListener listener) {
+        switch (whichButton) {
+            case AlertDialog.BUTTON_POSITIVE:
+                positiveButton = createButton(context, realAlertDialog, whichButton, text, listener);
+                return;
+            case AlertDialog.BUTTON_NEGATIVE:
+                negativeButton = createButton(context, realAlertDialog, whichButton, text, listener);
+                return;
+            case AlertDialog.BUTTON_NEUTRAL:
+                neutralButton = createButton(context, realAlertDialog, whichButton, text, listener);
+                return;
+        }
+        throw new RuntimeException("Only positive, negative, or neutral button choices are recognized");
+    }
+
+    private static Button createButton(final Context context, final DialogInterface dialog, final int which, CharSequence text, final DialogInterface.OnClickListener listener) {
+        if (text == null && listener == null) {
+            return null;
+        }
+        Button button = new Button(context);
+        Robolectric.shadowOf(button).setText(text); // use shadow to skip
+                                                    // i18n-strict checking
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onClick(dialog, which);
+                }
+                dialog.dismiss();
+            }
+        });
+        return button;
+    }
+
+    @Implementation
 	public ListView getListView() {
 		if (listView == null) {
 			listView = new ListView(context);
