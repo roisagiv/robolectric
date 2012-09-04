@@ -490,6 +490,7 @@ public class ShadowAlertDialog extends ShadowDialog {
 			return button;
 		}
 
+		@Implementation
 		protected Context getContext() {
 			return context;
 		}
