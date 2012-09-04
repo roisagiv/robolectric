@@ -88,11 +88,11 @@ public class ShadowAlertDialog extends ShadowDialog {
 	@Implementation
 	public Button getButton(int whichButton) {
 		switch (whichButton) {
-		case DialogInterface.BUTTON_POSITIVE:
-			return positiveButton;
-		case DialogInterface.BUTTON_NEGATIVE:
-			return negativeButton;
-		case DialogInterface.BUTTON_NEUTRAL:
+            case AlertDialog.BUTTON_POSITIVE:
+                return positiveButton;
+            case AlertDialog.BUTTON_NEGATIVE:
+                return negativeButton;
+            case AlertDialog.BUTTON_NEUTRAL:
 			return neutralButton;
 		}
 		throw new RuntimeException("Only positive, negative, or neutral button choices are recognized");
@@ -459,9 +459,9 @@ public class ShadowAlertDialog extends ShadowDialog {
 			latestAlertDialog.multiChoiceClickListener = multiChoiceClickListener;
 			latestAlertDialog.checkedItems = checkedItems;
 			latestAlertDialog.setView(view);
-			latestAlertDialog.positiveButton = createButton(realDialog, DialogInterface.BUTTON_POSITIVE, positiveText, positiveListener);
-			latestAlertDialog.negativeButton = createButton(realDialog, DialogInterface.BUTTON_NEGATIVE, negativeText, negativeListener);
-			latestAlertDialog.neutralButton = createButton(realDialog, DialogInterface.BUTTON_NEUTRAL, neutralText, neutralListener);
+            latestAlertDialog.positiveButton = createButton(context, realDialog, AlertDialog.BUTTON_POSITIVE, positiveText, positiveListener);
+            latestAlertDialog.negativeButton = createButton(context, realDialog, AlertDialog.BUTTON_NEGATIVE, negativeText, negativeListener);
+            latestAlertDialog.neutralButton = createButton(context, realDialog, AlertDialog.BUTTON_NEUTRAL, neutralText, neutralListener);
 			latestAlertDialog.setCancelable(isCancelable);
 			latestAlertDialog.customTitleView = customTitleView;
 			return realDialog;
@@ -474,7 +474,7 @@ public class ShadowAlertDialog extends ShadowDialog {
 			return dialog;
 		}
 
-		private Button createButton(final DialogInterface dialog, final int which, CharSequence text, final DialogInterface.OnClickListener listener) {
+		private Button createButton(Context context, final DialogInterface dialog, final int which, CharSequence text, final DialogInterface.OnClickListener listener) {
 			if (text == null && listener == null)
 				return null;
 			Button button = new Button(context);
