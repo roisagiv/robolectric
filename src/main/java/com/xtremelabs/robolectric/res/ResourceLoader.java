@@ -1,5 +1,10 @@
 package com.xtremelabs.robolectric.res;
 
+import com.xtremelabs.robolectric.Robolectric;
+import com.xtremelabs.robolectric.shadows.ShadowContextWrapper;
+import com.xtremelabs.robolectric.util.I18nException;
+import com.xtremelabs.robolectric.util.PropertiesHelper;
+
 import android.R;
 import android.content.Context;
 import android.graphics.drawable.AnimationDrawable;
@@ -10,14 +15,18 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.shadows.ShadowContextWrapper;
-import com.xtremelabs.robolectric.util.I18nException;
-import com.xtremelabs.robolectric.util.PropertiesHelper;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileFilter;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.HashSet;
+import java.util.Properties;
+import java.util.Set;
 
 import static com.xtremelabs.robolectric.Robolectric.shadowOf;
 
@@ -545,4 +554,24 @@ public class ResourceLoader {
 		init();
 		viewLoader.setLayoutQualifierSearchPath( locations );
 	}
+
+    /**
+     * method came from : https://gist.github.com/3541673
+     * @param libraryProjectRoot
+     * @throws Exception
+     */
+    public void loadLibraryProjectResources(File libraryProjectRoot) throws Exception {
+        File systemResourceDir = getSystemResourceDir(getPathToAndroidResources());
+        File localValueResourceDir = getValueResourceDir(libraryProjectRoot);
+        File systemValueResourceDir = getValueResourceDir(systemResourceDir);
+
+        loadStringResources(localValueResourceDir, systemValueResourceDir);
+        loadPluralsResources(localValueResourceDir, systemValueResourceDir);
+        loadValueResources(localValueResourceDir, systemValueResourceDir);
+        loadDimenResources(localValueResourceDir, systemValueResourceDir);
+        loadIntegerResource(localValueResourceDir, systemValueResourceDir);
+        loadViewResources(systemResourceDir, libraryProjectRoot);
+        loadMenuResources(libraryProjectRoot);
+        loadDrawableResources(libraryProjectRoot);
+    }
 }
