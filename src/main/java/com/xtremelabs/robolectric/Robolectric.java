@@ -1,5 +1,18 @@
 package com.xtremelabs.robolectric;
 
+import com.xtremelabs.robolectric.bytecode.RobolectricInternals;
+import com.xtremelabs.robolectric.bytecode.ShadowWrangler;
+import com.xtremelabs.robolectric.shadows.*;
+import com.xtremelabs.robolectric.tester.org.apache.http.FakeHttpLayer;
+import com.xtremelabs.robolectric.tester.org.apache.http.HttpRequestInfo;
+import com.xtremelabs.robolectric.tester.org.apache.http.RequestMatcher;
+import com.xtremelabs.robolectric.util.Scheduler;
+
+import org.apache.http.Header;
+import org.apache.http.HttpRequest;
+import org.apache.http.HttpResponse;
+import org.apache.http.impl.client.DefaultRequestDirector;
+
 import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.ActivityGroup;
@@ -108,7 +121,11 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.animation.*;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -147,17 +164,6 @@ import android.widget.VideoView;
 import android.widget.ViewAnimator;
 import android.widget.ViewFlipper;
 import android.widget.ZoomButtonsController;
-import com.xtremelabs.robolectric.bytecode.RobolectricInternals;
-import com.xtremelabs.robolectric.bytecode.ShadowWrangler;
-import com.xtremelabs.robolectric.shadows.*;
-import com.xtremelabs.robolectric.tester.org.apache.http.FakeHttpLayer;
-import com.xtremelabs.robolectric.tester.org.apache.http.HttpRequestInfo;
-import com.xtremelabs.robolectric.tester.org.apache.http.RequestMatcher;
-import com.xtremelabs.robolectric.util.Scheduler;
-import org.apache.http.Header;
-import org.apache.http.HttpRequest;
-import org.apache.http.HttpResponse;
-import org.apache.http.impl.client.DefaultRequestDirector;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -295,8 +301,8 @@ public class Robolectric {
                 ShadowFragmentPagerAdapter.class,
                 ShadowFrameLayout.class,
                 ShadowGallery.class,
-                ShadowGeocoder.class,
-                ShadowGeoPoint.class,
+//                ShadowGeocoder.class,
+//                ShadowGeoPoint.class,
                 ShadowGridView.class,
                 ShadowHandler.class,
                 ShadowHandlerThread.class,
@@ -306,7 +312,7 @@ public class Robolectric {
                 ShadowIntent.class,
                 ShadowIntentFilter.class,
                 ShadowIntentFilterAuthorityEntry.class,
-                ShadowItemizedOverlay.class,
+//                ShadowItemizedOverlay.class,
                 ShadowJsPromptResult.class,
                 ShadowJsResult.class,
                 ShadowKeyEvent.class,
@@ -324,9 +330,9 @@ public class Robolectric {
                 ShadowLocationManager.class,
                 ShadowLog.class,
                 ShadowLooper.class,
-                ShadowMapController.class,
-                ShadowMapActivity.class,
-                ShadowMapView.class,
+//                ShadowMapController.class,
+//                ShadowMapActivity.class,
+//                ShadowMapView.class,
                 ShadowMarginLayoutParams.class,
                 ShadowMatrix.class,
                 ShadowMatrixCursor.class,
@@ -339,12 +345,12 @@ public class Robolectric {
                 ShadowMimeTypeMap.class,
                 ShadowMotionEvent.class,
                 ShadowNotification.class,
-                ShadowNdefMessage.class,
-                ShadowNdefRecord.class,
-                ShadowNfcAdapter.class,
+//                ShadowNdefMessage.class,
+//                ShadowNdefRecord.class,
+//                ShadowNfcAdapter.class,
                 ShadowNotificationManager.class,
                 ShadowNetworkInfo.class,
-                ShadowOverlayItem.class,
+//                ShadowOverlayItem.class,
                 ShadowPagerAdapter.class,
                 ShadowPaint.class,
                 ShadowPair.class,
