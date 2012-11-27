@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.text.Selection;
+import android.text.SpannableStringBuilder;
 import android.view.*;
 import android.widget.FrameLayout;
 import com.xtremelabs.robolectric.Robolectric;
@@ -23,12 +25,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javassist.bytecode.Mnemonic;
+//import javassist.bytecode.Mnemonic;
 
 import static com.xtremelabs.robolectric.Robolectric.shadowOf;
 
 
-@SuppressWarnings({"UnusedDeclaration"})
 @Implements(Activity.class)
 public class ShadowActivity extends ShadowContextWrapper {
     @RealObject
@@ -58,6 +59,89 @@ public class ShadowActivity extends ShadowContextWrapper {
     private boolean onKeyUpWasCalled;
     private ArrayList<Cursor> managedCusors = new ArrayList<Cursor>();
 
+    private int mDefaultKeyMode = Activity.DEFAULT_KEYS_DISABLE;
+    private SpannableStringBuilder mDefaultKeySsb = null;
+
+    public void callOnCreate(Bundle bundle) {
+        invokeReflectively("onCreate", Bundle.class, bundle);
+    }
+
+    public void callOnRestoreInstanceState(Bundle savedInstanceState) {
+        invokeReflectively("onRestoreInstanceState", Bundle.class, savedInstanceState);
+    }
+
+    public void callOnPostCreate(android.os.Bundle savedInstanceState) {
+        invokeReflectively("onPostCreate", Bundle.class, savedInstanceState);
+    }
+
+    public void callOnStart() {
+        invokeReflectively("onStart");
+    }
+
+    public void callOnRestart() {
+        invokeReflectively("onRestart");
+    }
+
+    public void callOnResume() {
+        invokeReflectively("onResume");
+    }
+
+    public void callOnPostResume() {
+        invokeReflectively("onPostResume");
+    }
+
+    public void callOnNewIntent(android.content.Intent intent) {
+        invokeReflectively("onNewIntent", Intent.class, intent);
+    }
+
+    public void callOnSaveInstanceState(android.os.Bundle outState) {
+        invokeReflectively("onSaveInstanceState", Bundle.class, outState);
+    }
+
+    public void callOnPause() {
+        invokeReflectively("onPause");
+    }
+
+    public void callOnUserLeaveHint() {
+        invokeReflectively("onUserLeaveHint");
+    }
+
+    public void callOnStop() {
+        invokeReflectively("onStop");
+    }
+
+    public void callOnDestroy() {
+        invokeReflectively("onDestroy");
+    }
+
+    private void invokeReflectively(String methodName, Class<?> argClass, Object arg) {
+        try {
+            Method method = Activity.class.getDeclaredMethod(methodName, argClass);
+            method.setAccessible(true);
+            method.invoke(realActivity, arg);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void invokeReflectively(String methodName) {
+        try {
+            Method method = Activity.class.getDeclaredMethod(methodName);
+            method.setAccessible(true);
+            method.invoke(realActivity);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        } catch (NoSuchMethodException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     @Implementation
     public final Application getApplication() {
         return Robolectric.application;
@@ -77,6 +161,32 @@ public class ShadowActivity extends ShadowContextWrapper {
     @Implementation
     public Intent getIntent() {
         return intent;
+    }
+    
+    @Implementation
+    public void setDefaultKeyMode(int keyMode) {
+    	mDefaultKeyMode = keyMode;
+        
+        // Some modes use a SpannableStringBuilder to track & dispatch input events
+        // This list must remain in sync with the switch in onKeyDown()
+        switch (mDefaultKeyMode) {
+        case Activity.DEFAULT_KEYS_DISABLE:
+        case Activity.DEFAULT_KEYS_SHORTCUT:
+        	mDefaultKeySsb = null;      // not used in these modes
+            break;
+        case Activity.DEFAULT_KEYS_DIALER:
+        case Activity.DEFAULT_KEYS_SEARCH_LOCAL:
+        case Activity.DEFAULT_KEYS_SEARCH_GLOBAL:
+        	mDefaultKeySsb = new SpannableStringBuilder();
+            Selection.setSelection(mDefaultKeySsb, 0);
+            break;
+        default:
+            throw new IllegalArgumentException();
+        }
+    }
+    
+    public int getDefaultKeymode() {
+    	return mDefaultKeyMode;
     }
 
     @Implementation(i18nSafe = false)
@@ -204,6 +314,10 @@ public class ShadowActivity extends ShadowContextWrapper {
         return window;
     }
 
+    public void setWindow(TestWindow wind){
+    	window = wind;
+    }
+    
     @Implementation
     public void runOnUiThread(Runnable action) {
         Robolectric.getUiThreadScheduler().post(action);
@@ -483,6 +597,16 @@ public class ShadowActivity extends ShadowContextWrapper {
         invoker.call("onCreate", Bundle.class).with(outState);
         invoker.call("onStart").withNothing();
         invoker.call("onRestoreInstanceState", Bundle.class).with(outState);
+        invoker.call("onResume").withNothing();
+    }
+
+    public void pauseAndThenResume() {
+        final ActivityInvoker invoker = new ActivityInvoker();
+
+        invoker.call("onPause").withNothing();
+        invoker.call("onStop").withNothing();
+        invoker.call("onRestart").withNothing();
+        invoker.call("onStart").withNothing();
         invoker.call("onResume").withNothing();
     }
     
