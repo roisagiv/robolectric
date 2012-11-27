@@ -1,5 +1,13 @@
 package com.xtremelabs.robolectric.shadows;
 
+import com.xtremelabs.robolectric.Robolectric;
+import com.xtremelabs.robolectric.internal.Implementation;
+import com.xtremelabs.robolectric.internal.Implements;
+import com.xtremelabs.robolectric.internal.RealObject;
+import com.xtremelabs.robolectric.res.ResourceLoader;
+import com.xtremelabs.robolectric.tester.org.apache.http.FakeHttpLayer;
+import com.xtremelabs.robolectric.util.Scheduler;
+
 import android.app.Application;
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
@@ -15,13 +23,6 @@ import android.os.Looper;
 import android.os.PowerManager;
 import android.view.LayoutInflater;
 import android.widget.Toast;
-import com.xtremelabs.robolectric.Robolectric;
-import com.xtremelabs.robolectric.internal.Implementation;
-import com.xtremelabs.robolectric.internal.Implements;
-import com.xtremelabs.robolectric.internal.RealObject;
-import com.xtremelabs.robolectric.res.ResourceLoader;
-import com.xtremelabs.robolectric.tester.org.apache.http.FakeHttpLayer;
-import com.xtremelabs.robolectric.util.Scheduler;
 
 import java.util.ArrayList;
 import java.util.HashMap;

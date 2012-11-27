@@ -135,15 +135,15 @@ public class ResourceLoader {
 				File preferenceDir = getPreferenceResourceDir( resourceDir );
 
 				loadStringResources( localValueResourceDir, systemValueResourceDir );
-				loadPluralsResources( localValueResourceDir, systemValueResourceDir );
-				loadValueResources( localValueResourceDir, systemValueResourceDir );
-				loadDimenResources( localValueResourceDir, systemValueResourceDir );
-				loadIntegerResource( localValueResourceDir, systemValueResourceDir );
-				loadViewResources( systemResourceDir, resourceDir );
-				loadMenuResources( resourceDir );
-				loadDrawableResources( resourceDir );
-				loadPreferenceResources( preferenceDir );
-				loadXmlFileResources( preferenceDir );
+				loadPluralsResources(localValueResourceDir, systemValueResourceDir);
+				loadValueResources(localValueResourceDir, systemValueResourceDir);
+				loadDimenResources(localValueResourceDir, systemValueResourceDir);
+				loadIntegerResource(localValueResourceDir, systemValueResourceDir);
+				loadViewResources(systemResourceDir, resourceDir);
+				loadMenuResources(resourceDir);
+				loadDrawableResources(resourceDir);
+				loadPreferenceResources(preferenceDir);
+				loadXmlFileResources(preferenceDir);
 				
 				listNinePatchResources(ninePatchDrawableIds, resourceDir);
 			} else {
@@ -163,7 +163,6 @@ public class ResourceLoader {
 	/**
 	 * Reload values resources, include String, Plurals, Dimen, Prefs, Menu
 	 *
-	 * @param locale
 	 */
 	public void reloadValuesResouces( String qualifiers ) {
 		
@@ -464,7 +463,7 @@ public class ResourceLoader {
 	
 	public XmlResourceParser getXml( int id ) {
 		init();
-		return xmlFileLoader.getXml( id );
+		return xmlFileLoader.getXml(id);
 	}
 
 	public boolean isDrawableXml( int resourceId ) {
@@ -599,4 +598,19 @@ public class ResourceLoader {
 		init();
 		viewLoader.setLayoutQualifierSearchPath( locations );
 	}
+
+    public void loadLibraryProjectResources(File libraryProjectRoot) throws Exception {
+        File systemResourceDir = getSystemResourceDir(getPathToAndroidResources());
+        File localValueResourceDir = getValueResourceDir(libraryProjectRoot, null, true);
+        File systemValueResourceDir = getValueResourceDir(systemResourceDir, null, false);
+
+        loadStringResources(localValueResourceDir, systemValueResourceDir);
+        loadPluralsResources(localValueResourceDir, systemValueResourceDir);
+        loadValueResources(localValueResourceDir, systemValueResourceDir);
+        loadDimenResources(localValueResourceDir, systemValueResourceDir);
+        loadIntegerResource(localValueResourceDir, systemValueResourceDir);
+        loadViewResources(systemResourceDir, libraryProjectRoot);
+        loadMenuResources(libraryProjectRoot);
+        loadDrawableResources(libraryProjectRoot);
+    }
 }

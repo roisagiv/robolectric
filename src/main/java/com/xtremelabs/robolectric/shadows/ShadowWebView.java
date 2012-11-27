@@ -1,15 +1,15 @@
 package com.xtremelabs.robolectric.shadows;
 
-import android.content.Context;
-import android.util.AttributeSet;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.TestWebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import com.xtremelabs.robolectric.Robolectric;
 import com.xtremelabs.robolectric.internal.Implementation;
 import com.xtremelabs.robolectric.internal.Implements;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.webkit.TestWebSettings;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import java.util.HashMap;
 
