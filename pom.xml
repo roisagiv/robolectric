@@ -75,9 +75,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.android</groupId>
+            <groupId>android</groupId>
             <artifactId>android</artifactId>
-            <version>4.1.1.4</version>
+            <version>4.1_r2</version>
             <!-- <version>4.0.1.2</version> -->
             <scope>provided</scope>
         </dependency>
@@ -90,9 +90,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>support-v4</artifactId>
-            <version>r6</version>
+            <groupId>android.support</groupId>
+            <artifactId>compatibility-v4</artifactId>
+            <version>11</version>
         </dependency>
 
         <dependency>
