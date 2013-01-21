@@ -1,6 +1,7 @@
 package com.xtremelabs.robolectric.shadows;
 
 import android.app.Application;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
@@ -77,25 +78,28 @@ public class ViewGroupTest {
 
         AnimationListener animationListener = new AnimationListener() {
             @Override
-            public void onAnimationEnd(Animation a) { }
+            public void onAnimationEnd(Animation a) {
+            }
 
             @Override
-            public void onAnimationRepeat(Animation a) { }
+            public void onAnimationRepeat(Animation a) {
+            }
 
             @Override
-            public void onAnimationStart(Animation a) { }
+            public void onAnimationStart(Animation a) {
+            }
         };
         root.setLayoutAnimationListener(animationListener);
 
         assertThat(root.getLayoutAnimationListener(), sameInstance(animationListener));
     }
-    
+
     @Test
     public void testLayoutAnimation() {
-    	assertThat(root.getLayoutAnimation(), nullValue());
-    	LayoutAnimationController layoutAnim = new LayoutAnimationController(context, null);
-    	root.setLayoutAnimation(layoutAnim);
-    	assertThat(root.getLayoutAnimation(), sameInstance(layoutAnim));
+        assertThat(root.getLayoutAnimation(), nullValue());
+        LayoutAnimationController layoutAnim = new LayoutAnimationController(context, null);
+        root.setLayoutAnimation(layoutAnim);
+        assertThat(root.getLayoutAnimation(), sameInstance(layoutAnim));
     }
 
     @Test
@@ -276,6 +280,97 @@ public class ViewGroupTest {
             fail("Expected IllegalStateException");
         } catch (IllegalStateException e) {
             // pass
+        }
+    }
+
+    @Test
+    public void shouldKnowWhenOnInterceptTouchEventWasCalled() throws Exception {
+        ViewGroup viewGroup = new FrameLayout(context);
+
+        MotionEvent touchEvent = MotionEvent.obtain(0, 0, MotionEvent.ACTION_DOWN, 0, 0, 0);
+        viewGroup.onInterceptTouchEvent(touchEvent);
+
+        assertThat(shadowOf(viewGroup).getInterceptedTouchEvent(), equalTo(touchEvent));
+    }
+
+    @Test
+    public void removeView_shouldRequestLayout() throws Exception {
+        View view = new View(context);
+        ViewGroup viewGroup = new FrameLayout(context);
+        viewGroup.addView(view);
+        shadowOf(viewGroup).setDidRequestLayout(false);
+
+        viewGroup.removeView(view);
+        assertThat(shadowOf(viewGroup).didRequestLayout(), equalTo(true));
+    }
+
+    @Test
+    public void removeViewAt_shouldRequestLayout() throws Exception {
+        View view = new View(context);
+        ViewGroup viewGroup = new FrameLayout(context);
+        viewGroup.addView(view);
+        shadowOf(viewGroup).setDidRequestLayout(false);
+
+        viewGroup.removeViewAt(0);
+        assertThat(shadowOf(viewGroup).didRequestLayout(), equalTo(true));
+    }
+
+    @Test
+    public void removeAllViews_shouldRequestLayout() throws Exception {
+        View view = new View(context);
+        ViewGroup viewGroup = new FrameLayout(context);
+        viewGroup.addView(view);
+        shadowOf(viewGroup).setDidRequestLayout(false);
+
+        viewGroup.removeAllViews();
+        assertThat(shadowOf(viewGroup).didRequestLayout(), equalTo(true));
+    }
+
+    @Test
+    public void addView_shouldRequestLayout() throws Exception {
+        View view = new View(context);
+        ViewGroup viewGroup = new FrameLayout(context);
+        viewGroup.addView(view);
+
+        assertThat(shadowOf(viewGroup).didRequestLayout(), equalTo(true));
+    }
+
+    @Test
+    public void addView_withIndex_shouldRequestLayout() throws Exception {
+        View view = new View(context);
+        ViewGroup viewGroup = new FrameLayout(context);
+        viewGroup.addView(view, 0);
+
+        assertThat(shadowOf(viewGroup).didRequestLayout(), equalTo(true));
+    }
+
+    @Test
+    public void removeAllViews_shouldCallOnChildViewRemovedWithEachChild() throws Exception {
+        View view = new View(context);
+        ViewGroup viewGroup = new FrameLayout(context);
+        viewGroup.addView(view);
+
+        TestOnHierarchyChangeListener testListener = new TestOnHierarchyChangeListener();
+
+        viewGroup.setOnHierarchyChangeListener(testListener);
+        viewGroup.removeAllViews();
+        assertTrue(testListener.wasCalled());
+    }
+
+    class TestOnHierarchyChangeListener implements ViewGroup.OnHierarchyChangeListener {
+        boolean wasCalled = false;
+
+        @Override
+        public void onChildViewAdded(View parent, View child) {
+        }
+
+        @Override
+        public void onChildViewRemoved(View parent, View child) {
+            wasCalled = true;
+        }
+
+        public boolean wasCalled() {
+            return wasCalled;
         }
     }
 }
